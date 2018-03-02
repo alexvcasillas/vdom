@@ -1,3 +1,3 @@
-export { VDOM } from './vdom';
-export { renderElement } from './dom';
-export { Component } from './models';
+export { VDOM } from './vdom/index';
+export { renderElement } from './dom/index';
+export { Component } from './models/index';

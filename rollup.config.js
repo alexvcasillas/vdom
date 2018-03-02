@@ -1,42 +1,30 @@
-import filesize from 'rollup-plugin-filesize';
 import resolve from 'rollup-plugin-node-resolve';
-import uglify from 'rollup-plugin-uglify';
-import replace from 'rollup-plugin-replace';
-
-function getEnvVariables(production) {
-  return { 'process.env.NODE_ENV': production ? "'production'" : "'development'" };
-}
+import commonjs from 'rollup-plugin-commonjs';
+import pkg from './package.json';
 
 export default [
+  // browser-friendly UMD build
   {
-    entry: './lib/index.js',
-    dest: './dist/mobx-state-tree.js',
-    format: 'cjs',
-    external: ['mobx'],
-    globals: {
-      mobx: 'mobx'
+    input: 'lib/index.js',
+    output: {
+      name: 'vDOM',
+      file: 'dist/vdom.umd.js',
+      format: 'umd',
     },
-    plugins: [resolve(), filesize()]
+    plugins: [
+      resolve(), // so Rollup can find `ms`
+      commonjs(), // so Rollup can convert `ms` to an ES module
+    ],
   },
+  // CommonJS (for Node) and ES module (for bundlers) build.
+  // (We could have three entries in the configuration array
+  // instead of two, but it's quicker to generate multiple
+  // builds from a single configuration where possible, using
+  // an array for the `output` option, where we can specify
+  // `file` and `format` for each target)
   {
-    entry: './lib/index.js',
-    dest: './dist/mobx-state-tree.umd.js',
-    format: 'umd',
-    moduleName: 'mobxStateTree',
-    external: ['mobx'],
-    globals: {
-      mobx: 'mobx'
-    },
-    plugins: [resolve(), replace(getEnvVariables(true)), uglify(), filesize()]
+    input: 'lib/index.js',
+    external: ['ms'],
+    output: [{ file: 'dist/vdom.cjs.js', format: 'cjs' }, { file: 'dist/vdom.esm.js', format: 'es' }],
   },
-  {
-    entry: './lib/index.js',
-    dest: './dist/mobx-state-tree.module.js',
-    format: 'es',
-    external: ['mobx'],
-    globals: {
-      mobx: 'mobx'
-    },
-    plugins: [resolve(), filesize()]
-  }
 ];

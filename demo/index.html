@@ -9,10 +9,42 @@
 </head>
 
 <body>
-  <script src="./lib/vdom/index.js"></script>
-  <script src="./lib/dom/index.js"></script>
+  <script src="./vdom.umd.js"></script>
   <script>
-    console.log(VDOM);
+    console.log('vDOM: ', vDOM);
+
+    const virtualDOM = new vDOM.VDOM();
+
+    const componentOne = {
+      identifier: '1',
+      nodeName: 'p',
+      attributes: {
+        style: [{ fontFamily: 'Open Sans, sans-serif', fontSize: 14 }]
+      }
+    };
+    const componentTwo = {
+      identifier: '2',
+      nodeName: 'div'
+    };
+    const componentThree = {
+      identifier: '3',
+      nodeName: 'div',
+      attributes: {
+        items: ['Spain', 'California']
+      },
+      parent: componentOne.identifier
+    };
+
+    virtualDOM.addComponent(componentOne);
+    virtualDOM.addComponent(componentTwo);
+    virtualDOM.addComponent(componentThree);
+
+    virtualDOM.updateComponent({ ...componentOne, nodeName: 'div' });
+    virtualDOM.updateComponent({ ...componentThree, nodeName: 'h1' });
+
+    console.log(virtualDOM.renderVDOM());
+
+    vDOM.renderElement(componentOne);
   </script>
 </body>
 
