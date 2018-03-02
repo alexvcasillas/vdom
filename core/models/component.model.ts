@@ -1,7 +1,7 @@
 export abstract class Component {
   private state: object;
   private props: object;
-  abstract componentDidMount(): void;
-  abstract shouldComponentUpdate(): boolean;
+  componentDidMount?(): void;
+  shouldComponentUpdate?(): boolean;
   abstract render(): void;
 }
