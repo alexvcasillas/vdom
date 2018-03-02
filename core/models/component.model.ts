@@ -1,7 +1,6 @@
 export interface Component {
-  identifier: string;
-  nodeName: string;
-  attributes?: object;
-  parent?: string;
-  children?: Component[];
+  state: object;
+  componentDidMount(): void;
+  shouldComponentUpdate(): void;
+  render(): void;
 }

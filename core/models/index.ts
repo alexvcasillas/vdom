@@ -1,1 +1,1 @@
-export * from './component.model';
+export * from './virtual-component.model';
