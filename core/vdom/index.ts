@@ -1,61 +1,31 @@
 import { VirtualComponent } from '../models/virtual-component.model';
 
-export const VDOM = {
-  VirtualComponents: Array<VirtualComponent>(),
-  addVirtualComponent(VirtualComponent: VirtualComponent): void {
-    console.log('[VDOM@addVirtualComponent]');
-    console.log('VirtualComponent to add: ', VirtualComponent);
-    console.log('----');
-    if (VirtualComponent.parent) {
-      const parentVirtualComponent = this.VirtualComponents.filter(
-        parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
-      )[0];
-      if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
-      parentVirtualComponent.children.push(VirtualComponent);
-      return;
-    }
-    this.VirtualComponents.push(VirtualComponent);
+const VDOM = {
+  virtualComponents: new Map<string, VirtualComponent>(),
+  getParentComponent(virtualComponent: VirtualComponent): VirtualComponent {
+    return virtualComponent;
   },
-  updateVirtualComponent(VirtualComponent: VirtualComponent): void {
-    console.log('[VDOM@updateVirtualComponent]');
-    console.log('VirtualComponent to update: ', VirtualComponent);
-    console.log('----');
-    if (VirtualComponent.parent) {
-      console.log('The VirtualComponent has a parent!');
-      const parentVirtualComponent = this.VirtualComponents.filter(
-        parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
-      )[0];
-      console.log('Parent VirtualComponent: ', parentVirtualComponent);
-      console.log('----');
-      if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
-      parentVirtualComponent.children.map(childrenVirtualComponent => {
-        if (childrenVirtualComponent.identifier === VirtualComponent.identifier) {
-          console.log('VirtualComponent to update: ', childrenVirtualComponent);
-          Object.assign(childrenVirtualComponent, VirtualComponent);
-          console.log('VirtualComponent after update: ', childrenVirtualComponent);
-        }
-      });
-      console.log('----');
-      return;
-    }
-    console.log(`VirtualComponent doesn't have a parent!`);
-    this.VirtualComponents.map(searchVirtualComponent => {
-      if (searchVirtualComponent.identifier === VirtualComponent.identifier) {
-        console.log('VirtualComponent to update: ', searchVirtualComponent);
-        Object.assign(searchVirtualComponent, VirtualComponent);
-        console.log('VirtualComponent after update: ', searchVirtualComponent);
-      }
-    });
-    console.log('----');
+  addVirtualComponent(virtualComponent: VirtualComponent): VirtualComponent {
+    console.log(`[VirtualDOM@addVirtualComponent]`);
+    console.log('Component to add: ', virtualComponent);
+    return virtualComponent;
   },
-  removeVirtualComponent(VirtualComponent: VirtualComponent): void {},
-  renderVDOM() {
-    return JSON.stringify(this.VirtualComponents, null, 2);
+  updateVirtualComponent(virtualComponent: VirtualComponent): VirtualComponent {
+    return virtualComponent;
+  },
+  deleteVirtualComponent(virtualComponent: VirtualComponent): VirtualComponent {
+    return virtualComponent;
+  },
+  getVirtualDOM(): Map<string, VirtualComponent> {
+    return this.virtualComponents;
   },
 };
 
-// export class VDOM {
-//   VirtualComponents: VirtualComponent[] = [];
+export { VDOM };
+
+// export const VDOM = {
+//   VirtualComponents: Array<VirtualComponent>(),
+
 //   addVirtualComponent(VirtualComponent: VirtualComponent): void {
 //     console.log('[VDOM@addVirtualComponent]');
 //     console.log('VirtualComponent to add: ', VirtualComponent);
@@ -69,7 +39,7 @@ export const VDOM = {
 //       return;
 //     }
 //     this.VirtualComponents.push(VirtualComponent);
-//   }
+//   },
 //   updateVirtualComponent(VirtualComponent: VirtualComponent): void {
 //     console.log('[VDOM@updateVirtualComponent]');
 //     console.log('VirtualComponent to update: ', VirtualComponent);
@@ -101,9 +71,12 @@ export const VDOM = {
 //       }
 //     });
 //     console.log('----');
-//   }
-//   removeVirtualComponent(VirtualComponent: VirtualComponent): void {}
+//   },
+//   removeVirtualComponent(VirtualComponent: VirtualComponent): void {},
 //   renderVDOM() {
 //     return JSON.stringify(this.VirtualComponents, null, 2);
-//   }
-// }
+//   },
+//   getVirtualDOM() {
+//     return this.VirtualComponents;
+//   },
+// };

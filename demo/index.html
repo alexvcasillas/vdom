@@ -9,42 +9,65 @@
 </head>
 
 <body>
+
+  <div id="root"></div>
+
   <script src="./vdom.umd.js"></script>
   <script>
-    console.log('vDOM: ', vDOM);
 
-    const virtualDOM = new vDOM.VDOM();
+    console.log(vDOM);
+    const virtualDOM = vDOM.VDOM;
+    const realDOM = vDOM.RDOM;
 
-    const componentOne = {
-      identifier: '1',
-      nodeName: 'p',
-      attributes: {
-        style: [{ fontFamily: 'Open Sans, sans-serif', fontSize: 14 }]
-      }
+    console.log('virtualDOM: ', virtualDOM);
+    console.log('realDOM: ', realDOM);
+
+    const componentFour = {
+      identifier: '4',
+      nodeName: 'div',
     };
-    const componentTwo = {
-      identifier: '2',
-      nodeName: 'div'
+
+    const componentFive = {
+      identifier: '5',
+      nodeName: 'div',
     };
+
+    const componentSix = {
+      identifier: '6',
+      nodeName: 'div',
+    };
+
     const componentThree = {
       identifier: '3',
       nodeName: 'div',
       attributes: {
         items: ['Spain', 'California']
       },
-      parent: componentOne.identifier
+      children: [
+        componentFour, componentFive, componentSix
+      ]
     };
 
-    virtualDOM.addComponent(componentOne);
-    virtualDOM.addComponent(componentTwo);
-    virtualDOM.addComponent(componentThree);
+    const componentOne = {
+      identifier: '1',
+      nodeName: 'div',
+      attributes: {
+        style: [{ fontFamily: 'Open Sans, sans-serif', fontSize: 14 }]
+      },
+      children: [
+        componentThree
+      ]
+    };
+    const componentTwo = {
+      identifier: '2',
+      nodeName: 'div'
+    };
 
-    virtualDOM.updateComponent({ ...componentOne, nodeName: 'div' });
-    virtualDOM.updateComponent({ ...componentThree, nodeName: 'h1' });
 
-    console.log(virtualDOM.renderVDOM());
+    virtualDOM.addVirtualComponent(componentOne);
+    virtualDOM.addVirtualComponent(componentTwo);
 
-    vDOM.renderElement(componentOne);
+    realDOM.render(virtualDOM.getVirtualDOM(), document.getElementById('root'));
   </script>
 </body>
 

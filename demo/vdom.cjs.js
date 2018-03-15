@@ -2,65 +2,104 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var VDOM = /** @class */ (function () {
-    function VDOM() {
-        this.components = [];
-    }
-    VDOM.prototype.addComponent = function (component) {
-        console.log('[VDOM@addComponent]');
-        console.log('Component to add: ', component);
-        console.log('----');
-        if (component.parent) {
-            var parentComponent = this.components.filter(function (parentComponent) { return parentComponent.identifier === component.parent; })[0];
-            if (!parentComponent.children)
-                parentComponent.children = [];
-            parentComponent.children.push(component);
-            return;
-        }
-        this.components.push(component);
-    };
-    VDOM.prototype.updateComponent = function (component) {
-        console.log('[VDOM@updateComponent]');
-        console.log('Component to update: ', component);
-        console.log('----');
-        if (component.parent) {
-            console.log('The component has a parent!');
-            var parentComponent = this.components.filter(function (parentComponent) { return parentComponent.identifier === component.parent; })[0];
-            console.log('Parent component: ', parentComponent);
-            console.log('----');
-            if (!parentComponent.children)
-                parentComponent.children = [];
-            parentComponent.children.map(function (childrenComponent) {
-                if (childrenComponent.identifier === component.identifier) {
-                    console.log('Component to update: ', childrenComponent);
-                    Object.assign(childrenComponent, component);
-                    console.log('Component after update: ', childrenComponent);
+var VDOM = {
+    virtualComponents: new Map(),
+    getParentComponent: function (virtualComponent) {
+        return virtualComponent;
+    },
+    addVirtualComponent: function (virtualComponent) {
+        console.log("[VirtualDOM@addVirtualComponent]");
+        console.log('Component to add: ', virtualComponent);
+        return virtualComponent;
+    },
+    updateVirtualComponent: function (virtualComponent) {
+        return virtualComponent;
+    },
+    deleteVirtualComponent: function (virtualComponent) {
+        return virtualComponent;
+    },
+    getVirtualDOM: function () {
+        return this.virtualComponents;
+    },
+};
+// export const VDOM = {
+//   VirtualComponents: Array<VirtualComponent>(),
+//   addVirtualComponent(VirtualComponent: VirtualComponent): void {
+//     console.log('[VDOM@addVirtualComponent]');
+//     console.log('VirtualComponent to add: ', VirtualComponent);
+//     console.log('----');
+//     if (VirtualComponent.parent) {
+//       const parentVirtualComponent = this.VirtualComponents.filter(
+//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
+//       )[0];
+//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
+//       parentVirtualComponent.children.push(VirtualComponent);
+//       return;
+//     }
+//     this.VirtualComponents.push(VirtualComponent);
+//   },
+//   updateVirtualComponent(VirtualComponent: VirtualComponent): void {
+//     console.log('[VDOM@updateVirtualComponent]');
+//     console.log('VirtualComponent to update: ', VirtualComponent);
+//     console.log('----');
+//     if (VirtualComponent.parent) {
+//       console.log('The VirtualComponent has a parent!');
+//       const parentVirtualComponent = this.VirtualComponents.filter(
+//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
+//       )[0];
+//       console.log('Parent VirtualComponent: ', parentVirtualComponent);
+//       console.log('----');
+//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
+//       parentVirtualComponent.children.map(childrenVirtualComponent => {
+//         if (childrenVirtualComponent.identifier === VirtualComponent.identifier) {
+//           console.log('VirtualComponent to update: ', childrenVirtualComponent);
+//           Object.assign(childrenVirtualComponent, VirtualComponent);
+//           console.log('VirtualComponent after update: ', childrenVirtualComponent);
+//         }
+//       });
+//       console.log('----');
+//       return;
+//     }
+//     console.log(`VirtualComponent doesn't have a parent!`);
+//     this.VirtualComponents.map(searchVirtualComponent => {
+//       if (searchVirtualComponent.identifier === VirtualComponent.identifier) {
+//         console.log('VirtualComponent to update: ', searchVirtualComponent);
+//         Object.assign(searchVirtualComponent, VirtualComponent);
+//         console.log('VirtualComponent after update: ', searchVirtualComponent);
+//       }
+//     });
+//     console.log('----');
+//   },
+//   removeVirtualComponent(VirtualComponent: VirtualComponent): void {},
+//   renderVDOM() {
+//     return JSON.stringify(this.VirtualComponents, null, 2);
+//   },
+//   getVirtualDOM() {
+//     return this.VirtualComponents;
+//   },
+// };
+
+var RDOM = {
+    render: function (virtualTree, container, callback) {
+        var _this = this;
+        console.log('[DOM@renderElement]');
+        console.log('Vitual Tree: ', virtualTree);
+        if (Array.isArray(virtualTree)) {
+            virtualTree.forEach(function (vComponent) {
+                var element = document.createElement(vComponent.nodeName);
+                element.innerText = vComponent.identifier;
+                container.appendChild(element);
+                if (vComponent.children) {
+                    _this.render(vComponent.children, element);
                 }
             });
-            console.log('----');
-            return;
         }
-        console.log("Component doesn't have a parent!");
-        this.components.map(function (searchComponent) {
-            if (searchComponent.identifier === component.identifier) {
-                console.log('Component to update: ', searchComponent);
-                Object.assign(searchComponent, component);
-                console.log('Component after update: ', searchComponent);
-            }
-        });
-        console.log('----');
-    };
-    VDOM.prototype.removeComponent = function (component) { };
-    VDOM.prototype.renderVDOM = function () {
-        return JSON.stringify(this.components, null, 2);
-    };
-    return VDOM;
-}());
-
-var renderElement = function (component) {
-    console.log('[DOM@renderElement]');
-    console.log('Component to render: ', JSON.stringify(component, null, 2));
+    },
 };
+//# sourceMappingURL=index.js.map
+
+//# sourceMappingURL=index.js.map
 
 exports.VDOM = VDOM;
-exports.renderElement = renderElement;
+exports.RDOM = RDOM;
+//# sourceMappingURL=vdom.cjs.js.map

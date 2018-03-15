@@ -3,6 +3,5 @@ export interface VirtualComponent {
   nodeName: string;
   state?: object;
   attributes?: object;
-  parent?: string;
   children?: VirtualComponent[];
 }
