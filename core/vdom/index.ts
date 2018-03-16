@@ -25,25 +25,50 @@ const VDOM = {
   virtualDOM(): Map<string, VirtualComponent> {
     return this.virtualComponents;
   },
-  createElement(virtualComponent: VirtualComponent, mountPoint: Element): Element {
+  /**
+   * This method sets all of the attributes from the virtual component
+   * to the DOM element.
+   * @param element DOM Element to add attributes to
+   * @param virtualComponent Virtual Component that contains all the attributes to be added
+   */
+  setElementAttributes(element: Element, attributes: any): void {
+    if (!attributes) return;
+    Object.keys(attributes).forEach((attribute: any) => {
+      // Do something with attributes ...
+    });
+  },
+  /**
+   * This method creates a virtual component and mounts it
+   * at the given mount point.
+   * @param virtualComponent Virtual Component to create
+   * @param mountPoint Mount point of the given Virtual Component
+   */
+  createElement(virtualComponent: VirtualComponent, mountPoint: Element): void {
     console.log(`[VirtualDOM@createElement]`);
-    console.log('Element to be created: ', virtualComponent);
+    // Create the element
     const element = document.createElement(virtualComponent.nodeName);
-    element.innerText = virtualComponent.identifier;
+    // Set the vdom-key attribute (development only)
+    element.setAttribute('vdom-key', virtualComponent.identifier);
+    this.setElementAttributes(element, virtualComponent.attributes);
+    // Check if this virtual component has childrens
     if (virtualComponent.children) {
-      console.log('The component has children !!');
+      // If it does, iterate though each of them
       virtualComponent.children.forEach(children => {
-        console.log('Children: ', children);
+        // Recursively call the createElement with the children and the mount point
         this.createElement(children, element);
       });
     }
+    // Append this element to the mount point
     mountPoint.appendChild(element);
-    return element;
   },
+  /**
+   * This method starts the creation process of the Virtual DOM Tree
+   * @param virtualComponent Virtual Component to render
+   * @param mount Mount point of the given Virtual Component
+   */
   render(virtualComponent: VirtualComponent, mount: Element): void {
     console.log(`[VirtualDOM@render]`);
-    console.log('Component to render: ', virtualComponent);
-    console.log('Mount point: ', mount);
+    // Call the create element with the virtual component and the mount point
     this.createElement(virtualComponent, mount);
   }
 };
