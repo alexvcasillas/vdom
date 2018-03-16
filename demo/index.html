@@ -17,10 +17,8 @@
 
     console.log(vDOM);
     const virtualDOM = vDOM.VDOM;
-    const realDOM = vDOM.RDOM;
 
     console.log('virtualDOM: ', virtualDOM);
-    console.log('realDOM: ', realDOM);
 
     const componentFour = {
       identifier: '4',
@@ -63,11 +61,7 @@
       nodeName: 'div'
     };
 
-
-    virtualDOM.addVirtualComponent(componentOne);
-    virtualDOM.addVirtualComponent(componentTwo);
-
-    realDOM.render(virtualDOM.getVirtualDOM(), document.getElementById('root'));
+    virtualDOM.render(componentOne, document.getElementById('root'));
   </script>
 </body>
 

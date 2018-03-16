@@ -3,13 +3,19 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var VDOM = {
+    // Here we will store our virtual components
     virtualComponents: new Map(),
+    // Here we will store the listeners for our virtual components
+    virtualListeners: new Map(),
     getParentComponent: function (virtualComponent) {
         return virtualComponent;
     },
     addVirtualComponent: function (virtualComponent) {
         console.log("[VirtualDOM@addVirtualComponent]");
-        console.log('Component to add: ', virtualComponent);
+        this.virtualComponents.set(virtualComponent.identifier, virtualComponent);
+        this.virtualListeners.set(virtualComponent.identifier, function () {
+            console.log('Virtual component listener called');
+        });
         return virtualComponent;
     },
     updateVirtualComponent: function (virtualComponent) {
@@ -18,88 +24,34 @@ var VDOM = {
     deleteVirtualComponent: function (virtualComponent) {
         return virtualComponent;
     },
-    getVirtualDOM: function () {
+    virtualDOM: function () {
         return this.virtualComponents;
     },
-};
-// export const VDOM = {
-//   VirtualComponents: Array<VirtualComponent>(),
-//   addVirtualComponent(VirtualComponent: VirtualComponent): void {
-//     console.log('[VDOM@addVirtualComponent]');
-//     console.log('VirtualComponent to add: ', VirtualComponent);
-//     console.log('----');
-//     if (VirtualComponent.parent) {
-//       const parentVirtualComponent = this.VirtualComponents.filter(
-//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
-//       )[0];
-//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
-//       parentVirtualComponent.children.push(VirtualComponent);
-//       return;
-//     }
-//     this.VirtualComponents.push(VirtualComponent);
-//   },
-//   updateVirtualComponent(VirtualComponent: VirtualComponent): void {
-//     console.log('[VDOM@updateVirtualComponent]');
-//     console.log('VirtualComponent to update: ', VirtualComponent);
-//     console.log('----');
-//     if (VirtualComponent.parent) {
-//       console.log('The VirtualComponent has a parent!');
-//       const parentVirtualComponent = this.VirtualComponents.filter(
-//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
-//       )[0];
-//       console.log('Parent VirtualComponent: ', parentVirtualComponent);
-//       console.log('----');
-//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
-//       parentVirtualComponent.children.map(childrenVirtualComponent => {
-//         if (childrenVirtualComponent.identifier === VirtualComponent.identifier) {
-//           console.log('VirtualComponent to update: ', childrenVirtualComponent);
-//           Object.assign(childrenVirtualComponent, VirtualComponent);
-//           console.log('VirtualComponent after update: ', childrenVirtualComponent);
-//         }
-//       });
-//       console.log('----');
-//       return;
-//     }
-//     console.log(`VirtualComponent doesn't have a parent!`);
-//     this.VirtualComponents.map(searchVirtualComponent => {
-//       if (searchVirtualComponent.identifier === VirtualComponent.identifier) {
-//         console.log('VirtualComponent to update: ', searchVirtualComponent);
-//         Object.assign(searchVirtualComponent, VirtualComponent);
-//         console.log('VirtualComponent after update: ', searchVirtualComponent);
-//       }
-//     });
-//     console.log('----');
-//   },
-//   removeVirtualComponent(VirtualComponent: VirtualComponent): void {},
-//   renderVDOM() {
-//     return JSON.stringify(this.VirtualComponents, null, 2);
-//   },
-//   getVirtualDOM() {
-//     return this.VirtualComponents;
-//   },
-// };
-
-var RDOM = {
-    render: function (virtualTree, container, callback) {
+    createElement: function (virtualComponent, mountPoint) {
         var _this = this;
-        console.log('[DOM@renderElement]');
-        console.log('Vitual Tree: ', virtualTree);
-        if (Array.isArray(virtualTree)) {
-            virtualTree.forEach(function (vComponent) {
-                var element = document.createElement(vComponent.nodeName);
-                element.innerText = vComponent.identifier;
-                container.appendChild(element);
-                if (vComponent.children) {
-                    _this.render(vComponent.children, element);
-                }
+        console.log("[VirtualDOM@createElement]");
+        console.log('Element to be created: ', virtualComponent);
+        var element = document.createElement(virtualComponent.nodeName);
+        element.innerText = virtualComponent.identifier;
+        if (virtualComponent.children) {
+            console.log('The component has children !!');
+            virtualComponent.children.forEach(function (children) {
+                console.log('Children: ', children);
+                _this.createElement(children, element);
             });
         }
+        mountPoint.appendChild(element);
+        return element;
     },
+    render: function (virtualComponent, mount) {
+        console.log("[VirtualDOM@render]");
+        console.log('Component to render: ', virtualComponent);
+        console.log('Mount point: ', mount);
+        this.createElement(virtualComponent, mount);
+    }
 };
-//# sourceMappingURL=index.js.map
 
 //# sourceMappingURL=index.js.map
 
 exports.VDOM = VDOM;
-exports.RDOM = RDOM;
 //# sourceMappingURL=vdom.cjs.js.map
