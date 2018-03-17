@@ -18,6 +18,18 @@
     console.log(vDOM);
     const virtualDOM = vDOM.VDOM;
 
+    const Componente = vDOM.Component;
+
+    console.log('Component: ', Componente);
+
+    Componente.setState(() => ({ working: 'true' }));
+
+    console.log(Componente);
+
+    Componente.setState({ working: 'false' });
+
+    console.log(Componente);
+
     console.log('virtualDOM: ', virtualDOM);
 
     const componentFour = {

@@ -1,3 +1,4 @@
-import { VDOM } from './vdom/index';
+import { VDOM } from './vdom';
+import { Component } from './models';
 
-export { VDOM };
+export { VDOM, Component };

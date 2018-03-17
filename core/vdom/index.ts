@@ -1,4 +1,4 @@
-import { VirtualComponent } from '../models/virtual-component.model';
+import { VirtualComponent, Component } from '../models/virtual-component.model';
 
 const VDOM = {
   // Here we will store our virtual components
@@ -70,7 +70,7 @@ const VDOM = {
     console.log(`[VirtualDOM@render]`);
     // Call the create element with the virtual component and the mount point
     this.createElement(virtualComponent, mount);
-  }
+  },
 };
 
 export { VDOM };

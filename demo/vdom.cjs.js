@@ -3,19 +3,13 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var VDOM = {
-    // Here we will store our virtual components
     virtualComponents: new Map(),
-    // Here we will store the listeners for our virtual components
-    virtualListeners: new Map(),
     getParentComponent: function (virtualComponent) {
         return virtualComponent;
     },
     addVirtualComponent: function (virtualComponent) {
         console.log("[VirtualDOM@addVirtualComponent]");
-        this.virtualComponents.set(virtualComponent.identifier, virtualComponent);
-        this.virtualListeners.set(virtualComponent.identifier, function () {
-            console.log('Virtual component listener called');
-        });
+        console.log('Component to add: ', virtualComponent);
         return virtualComponent;
     },
     updateVirtualComponent: function (virtualComponent) {
@@ -24,60 +18,85 @@ var VDOM = {
     deleteVirtualComponent: function (virtualComponent) {
         return virtualComponent;
     },
-    virtualDOM: function () {
+    getVirtualDOM: function () {
         return this.virtualComponents;
     },
-    /**
-     * This method sets all of the attributes from the virtual component
-     * to the DOM element.
-     * @param element DOM Element to add attributes to
-     * @param virtualComponent Virtual Component that contains all the attributes to be added
-     */
-    setElementAttributes: function (element, attributes) {
-        if (!attributes)
-            return;
-        Object.keys(attributes).forEach(function (attribute) {
-            // Do something with attributes ...
-        });
-    },
-    /**
-     * This method creates a virtual component and mounts it
-     * at the given mount point.
-     * @param virtualComponent Virtual Component to create
-     * @param mountPoint Mount point of the given Virtual Component
-     */
-    createElement: function (virtualComponent, mountPoint) {
+};
+// export const VDOM = {
+//   VirtualComponents: Array<VirtualComponent>(),
+//   addVirtualComponent(VirtualComponent: VirtualComponent): void {
+//     console.log('[VDOM@addVirtualComponent]');
+//     console.log('VirtualComponent to add: ', VirtualComponent);
+//     console.log('----');
+//     if (VirtualComponent.parent) {
+//       const parentVirtualComponent = this.VirtualComponents.filter(
+//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
+//       )[0];
+//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
+//       parentVirtualComponent.children.push(VirtualComponent);
+//       return;
+//     }
+//     this.VirtualComponents.push(VirtualComponent);
+//   },
+//   updateVirtualComponent(VirtualComponent: VirtualComponent): void {
+//     console.log('[VDOM@updateVirtualComponent]');
+//     console.log('VirtualComponent to update: ', VirtualComponent);
+//     console.log('----');
+//     if (VirtualComponent.parent) {
+//       console.log('The VirtualComponent has a parent!');
+//       const parentVirtualComponent = this.VirtualComponents.filter(
+//         parentVirtualComponent => parentVirtualComponent.identifier === VirtualComponent.parent,
+//       )[0];
+//       console.log('Parent VirtualComponent: ', parentVirtualComponent);
+//       console.log('----');
+//       if (!parentVirtualComponent.children) parentVirtualComponent.children = [];
+//       parentVirtualComponent.children.map(childrenVirtualComponent => {
+//         if (childrenVirtualComponent.identifier === VirtualComponent.identifier) {
+//           console.log('VirtualComponent to update: ', childrenVirtualComponent);
+//           Object.assign(childrenVirtualComponent, VirtualComponent);
+//           console.log('VirtualComponent after update: ', childrenVirtualComponent);
+//         }
+//       });
+//       console.log('----');
+//       return;
+//     }
+//     console.log(`VirtualComponent doesn't have a parent!`);
+//     this.VirtualComponents.map(searchVirtualComponent => {
+//       if (searchVirtualComponent.identifier === VirtualComponent.identifier) {
+//         console.log('VirtualComponent to update: ', searchVirtualComponent);
+//         Object.assign(searchVirtualComponent, VirtualComponent);
+//         console.log('VirtualComponent after update: ', searchVirtualComponent);
+//       }
+//     });
+//     console.log('----');
+//   },
+//   removeVirtualComponent(VirtualComponent: VirtualComponent): void {},
+//   renderVDOM() {
+//     return JSON.stringify(this.VirtualComponents, null, 2);
+//   },
+//   getVirtualDOM() {
+//     return this.VirtualComponents;
+//   },
+// };
+
+var RDOM = {
+    render: function (virtualTree, container, callback) {
         var _this = this;
-        console.log("[VirtualDOM@createElement]");
-        // Create the element
-        var element = document.createElement(virtualComponent.nodeName);
-        // Set the vdom-key attribute (development only)
-        element.setAttribute('vdom-key', virtualComponent.identifier);
-        this.setElementAttributes(element, virtualComponent.attributes);
-        // Check if this virtual component has childrens
-        if (virtualComponent.children) {
-            // If it does, iterate though each of them
-            virtualComponent.children.forEach(function (children) {
-                // Recursively call the createElement with the children and the mount point
-                _this.createElement(children, element);
+        console.log('[DOM@renderElement]');
+        console.log('Vitual Tree: ', virtualTree);
+        if (Array.isArray(virtualTree)) {
+            virtualTree.forEach(function (vComponent) {
+                var element = document.createElement(vComponent.nodeName);
+                element.innerText = vComponent.identifier;
+                container.appendChild(element);
+                if (vComponent.children) {
+                    _this.render(vComponent.children, element);
+                }
             });
         }
-        // Append this element to the mount point
-        mountPoint.appendChild(element);
     },
-    /**
-     * This method starts the creation process of the Virtual DOM Tree
-     * @param virtualComponent Virtual Component to render
-     * @param mount Mount point of the given Virtual Component
-     */
-    render: function (virtualComponent, mount) {
-        console.log("[VirtualDOM@render]");
-        // Call the create element with the virtual component and the mount point
-        this.createElement(virtualComponent, mount);
-    }
 };
 
-//# sourceMappingURL=index.js.map
-
 exports.VDOM = VDOM;
+exports.RDOM = RDOM;
 //# sourceMappingURL=vdom.cjs.js.map
