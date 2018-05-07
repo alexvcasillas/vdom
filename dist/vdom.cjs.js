@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 var standardAttributes = {
     // HTML
     accept: 'accept',
@@ -482,7 +486,6 @@ var standardAttributes = {
     z: 'z',
     zoomandpan: 'zoomAndPan'
 };
-//# sourceMappingURL=standard-attributes.js.map
 
 var isUnitlessNumber = {
     animationIterationCount: true,
@@ -528,12 +531,10 @@ var isUnitlessNumber = {
     strokeOpacity: true,
     strokeWidth: true
 };
-//# sourceMappingURL=css-properties.js.map
 
 var camelCaseToDash = function (str) {
     return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
 };
-//# sourceMappingURL=camel-to-dash.js.map
 
 var VDOM = {
     // Here we will store our virtual components
@@ -635,7 +636,6 @@ var VDOM = {
         this.createElement(virtualComponent, mount);
     }
 };
-//# sourceMappingURL=index.js.map
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -749,11 +749,6 @@ var Component = {
         });
     }
 };
-//# sourceMappingURL=virtual-component.model.js.map
 
-//# sourceMappingURL=index.js.map
-
-//# sourceMappingURL=index.js.map
-
-export { VDOM, Component };
-//# sourceMappingURL=vdom.esm.js.map
+exports.VDOM = VDOM;
+exports.Component = Component;

@@ -11,7 +11,7 @@ export default [
       format: 'umd',
       sourcemap: true,
     },
-    plugins: [resolve(), commonjs(), filesize()],
+    plugins: [resolve(), filesize()],
   },
   {
     input: 'lib/index.js',
@@ -19,6 +19,6 @@ export default [
       { file: 'demo/vdom.cjs.js', format: 'cjs', sourcemap: true },
       { file: 'demo/vdom.esm.js', format: 'es', sourcemap: true },
     ],
-    plugins: [filesize()],
+    plugins: [resolve(), filesize()],
   },
 ];

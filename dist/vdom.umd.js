@@ -1,3 +1,9 @@
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.vDOM = {})));
+}(this, (function (exports) { 'use strict';
+
 var standardAttributes = {
     // HTML
     accept: 'accept',
@@ -482,7 +488,6 @@ var standardAttributes = {
     z: 'z',
     zoomandpan: 'zoomAndPan'
 };
-//# sourceMappingURL=standard-attributes.js.map
 
 var isUnitlessNumber = {
     animationIterationCount: true,
@@ -528,12 +533,10 @@ var isUnitlessNumber = {
     strokeOpacity: true,
     strokeWidth: true
 };
-//# sourceMappingURL=css-properties.js.map
 
 var camelCaseToDash = function (str) {
     return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
 };
-//# sourceMappingURL=camel-to-dash.js.map
 
 var VDOM = {
     // Here we will store our virtual components
@@ -635,7 +638,6 @@ var VDOM = {
         this.createElement(virtualComponent, mount);
     }
 };
-//# sourceMappingURL=index.js.map
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -749,11 +751,10 @@ var Component = {
         });
     }
 };
-//# sourceMappingURL=virtual-component.model.js.map
 
-//# sourceMappingURL=index.js.map
+exports.VDOM = VDOM;
+exports.Component = Component;
 
-//# sourceMappingURL=index.js.map
+Object.defineProperty(exports, '__esModule', { value: true });
 
-export { VDOM, Component };
-//# sourceMappingURL=vdom.esm.js.map
+})));
