@@ -10,11 +10,11 @@ export default [
       file: 'dist/vdom.umd.js',
       format: 'umd',
     },
-    plugins: [resolve(), commonjs(), filesize()],
+    plugins: [resolve(), filesize()],
   },
   {
     input: 'lib/index.js',
     output: [{ file: 'dist/vdom.cjs.js', format: 'cjs' }, { file: 'dist/vdom.esm.js', format: 'es' }],
-    plugins: [filesize()],
+    plugins: [resolve(), filesize()],
   },
 ];

@@ -1,4 +1,7 @@
 import { VirtualComponent } from '../models/virtual-component.model';
+import { standardAttributes } from '../utils/standard-attributes';
+import { CSSProperties, isUnitlessNumber } from '../utils/css-properties';
+import { camelCaseToDash } from '../utils/camel-to-dash';
 
 const VDOM = {
   // Here we will store our virtual components
@@ -33,8 +36,32 @@ const VDOM = {
    */
   setElementAttributes(element: Element, attributes: any): void {
     if (!attributes) return;
+    console.log('Element: ', element.nodeName);
     Object.keys(attributes).forEach((attribute: any) => {
       // Do something with attributes ...
+      console.log('Attribute: ', attribute);
+      console.log('Attribute value: ', attributes[attribute]);
+      // Check for a valid standard attribute
+      if (standardAttributes.hasOwnProperty(attribute)) {
+        console.log(`${attribute} is a valid standard property`);
+        // Check for style
+        if (attribute === 'style') {
+          // Here we will build the inline style string
+          let styleString: string = '';
+          Object.keys(attributes[attribute]).forEach(cssProperty => {
+            // Is this a number property?
+            const numberProp = typeof attributes[attribute][cssProperty] === 'number';
+            // Build the string with each of the properties
+            styleString += `${camelCaseToDash(cssProperty)}: ${attributes[attribute][cssProperty]}${numberProp && !isUnitlessNumber.hasOwnProperty(cssProperty) ? 'px' : ''}; `;
+          });
+          element.setAttribute(attribute, styleString);
+        } else {
+          // Regular attribute, just set it
+          element.setAttribute(attribute, attributes[attribute]);
+        }
+      } else {
+        console.log(`${attribute} is not a valid standard property. Maybe is a custom prop`);
+      }
     });
   },
   /**

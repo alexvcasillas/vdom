@@ -46,19 +46,27 @@
       ]
     };
 
+    const componentTwo = {
+      identifier: '2',
+      nodeName: 'div',
+      attributes: {
+        alt: 'VDOM Development'
+      },
+      children: [
+        componentThree,
+      ]
+    };
+
     const componentOne = {
       identifier: '1',
       nodeName: 'div',
       attributes: {
-        style: [{ fontFamily: 'Open Sans, sans-serif', fontSize: 14 }]
+        style: { fontFamily: 'Open Sans, sans-serif', fontSize: 14 }
       },
       children: [
-        componentThree
+        componentTwo,
+        componentThree,
       ]
-    };
-    const componentTwo = {
-      identifier: '2',
-      nodeName: 'div'
     };
 
     virtualDOM.render(componentOne, document.getElementById('root'));
