@@ -9,7 +9,6 @@ export interface VirtualAttributes {
 // tslint:disable-next-line:interface-name
 export interface VirtualComponent {
   identifier: string;
-  nodeRef: any;
   nodeName: string;
   state?: Object;
   attributes?: VirtualAttributes;
@@ -18,25 +17,20 @@ export interface VirtualComponent {
 }
 
 export function removeVirtualComponentListeners(virtualComponent: VirtualComponent) {
-  virtualComponent.listeners.forEach((listener, event) => {
-    if (virtualComponent.nodeRef.nodeType === Node.ELEMENT_NODE) {
-      virtualComponent.nodeRef.removeEventListener(event, listener);
-    }
-  });
+  virtualComponent.listeners.forEach((listener, event) => {});
 }
 
 export const createVirtualComponent = (virtualComponent: VirtualComponent, reference: Element): VirtualComponent => {
   if (!virtualComponent) throw new Error(`You need to pass a Virtual Component to create it's virtual instance.`);
   const virtualInstance: VirtualComponent = {
     identifier: virtualComponent.identifier,
-    nodeRef: virtualComponent.nodeRef,
     nodeName: virtualComponent.nodeName,
     attributes: virtualComponent.attributes || {},
     children: virtualComponent.children || [],
     listeners: virtualComponent.listeners,
   };
   if (virtualInstance.attributes) {
-    const { attributes, listeners, nodeRef } = virtualInstance;
+    const { attributes, listeners } = virtualInstance;
     Object.keys(attributes).forEach(name => {
       if (isListener(name)) {
         console.log('Attribute is a listener');
