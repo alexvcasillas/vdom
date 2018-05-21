@@ -1,1 +1,2 @@
-export { VirtualComponent, Component } from './virtual-component.model';
+export * from './virtual-component.model';
+export * from './component.model';

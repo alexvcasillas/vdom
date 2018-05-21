@@ -1,36 +1,43 @@
+import { IComponent } from '.';
+import { isListener } from '../utils';
+
+// tslint:disable-next-line:interface-name
+export interface VirtualAttributes {
+  [key: string]: Object | EventListener;
+}
+
 // tslint:disable-next-line:interface-name
 export interface VirtualComponent {
   identifier: string;
+  nodeRef?: Element;
   nodeName: string;
   state?: Object;
-  attributes?: Object;
-  children?: VirtualComponent[];
+  attributes?: VirtualAttributes;
+  children: VirtualComponent[];
 }
 
-export const Component = {
-  __state: {},
-  __props: {},
-  async setState(state: Object | Function): Promise<Object> {
-    console.log('setState called !!');
-    console.log('Received: ', state);
-    // Check if the state is being setted as a function
-    if (typeof state === 'function') {
-      // Execute the function to get the state
-      const result = await state();
-      // Assign the new state changes
-      this.__state = Object.assign({}, { ...this.__state }, { ...result });
-      // Return the current state after changes
-      return this.__state;
-    }
-    // Assign the new state changes
-    this.__state = Object.assign({}, { ...this.__state }, { ...state });
-    // Return the current state after changes
-    return this.__state;
-  },
-  async constructor() { },
-  async componentDidMount() { },
-  async shouldComponentUpdate() { },
-  async render() {
-    console.log('Original render called');
+export const createVirtualComponent = (component: VirtualComponent, reference: Element): VirtualComponent => {
+  const listeners = new Map<string, Function>();
+  if (!component) throw new Error(`You need to pass a Component to create it's virtual instance.`);
+  const virtualInstance: VirtualComponent = {
+    identifier: component.identifier,
+    nodeRef: reference,
+    nodeName: component.nodeName,
+    attributes: component.attributes || {},
+    children: component.children || [],
+  };
+  if (virtualInstance.attributes) {
+    const { attributes } = virtualInstance;
+    Object.keys(attributes).forEach(name => {
+      if (isListener(name)) {
+        console.log('Attribute is a listener');
+        const eventType: string = name.toLowerCase().substring(2);
+        const eventListener = attributes[name];
+        if (typeof eventListener !== 'function') return;
+        reference.addEventListener(eventType, eventListener);
+        listeners.set(eventType, eventListener);
+      }
+    });
   }
+  return virtualInstance;
 };

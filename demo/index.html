@@ -17,69 +17,80 @@
 
     console.log(vDOM);
     const virtualDOM = vDOM.VDOM;
+    const createComponent = vDOM.createComponent;
 
-    const Componente = vDOM.Component;
-
-    console.log('Component: ', Componente);
-
-    Componente.setState(() => ({ working: 'true' }));
-
-    console.log(Componente);
-
-    Componente.setState({ working: 'false' });
-
-    console.log(Componente);
-
-    console.log('virtualDOM: ', virtualDOM);
-
-    const componentFour = {
-      identifier: '4',
-      nodeName: 'div',
-    };
-
-    const componentFive = {
-      identifier: '5',
-      nodeName: 'div',
-    };
-
-    const componentSix = {
-      identifier: '6',
-      nodeName: 'div',
-    };
-
-    const componentThree = {
-      identifier: '3',
-      nodeName: 'div',
+    const componentFour = createComponent({
+      element: 'div',
+      children: ['Component Four'],
       attributes: {
-        items: ['Spain', 'California']
+        style: { marginBottom: 5, padding: 10 },
+        onClick: function () {
+          alert(`Hello, I'm component Four!`)
+        }
+      }
+    });
+
+    const componentFive = createComponent({
+      element: 'div',
+      children: ['Component Five'],
+      attributes: {
+        style: { marginBottom: 5, padding: 10 },
+        onClick: function () {
+          alert(`Hello, I'm component Five!`)
+        }
+      }
+    });
+
+    const componentSix = createComponent({
+      element: 'div',
+      children: ['Component Six'],
+      attributes: {
+        style: { marginBottom: 5, padding: 10 },
+        onClick: function () {
+          alert(`Hello, I'm component Six!`)
+        }
+      }
+    });
+
+    const componentThree = createComponent({
+      element: 'div',
+      attributes: {
+        items: ['Spain', 'California'],
       },
       children: [
         componentFour, componentFive, componentSix
       ]
-    };
+    });
 
-    const componentTwo = {
-      identifier: '2',
-      nodeName: 'div',
+    const componentTwo = createComponent({
+      element: 'div',
       attributes: {
-        alt: 'VDOM Development'
+        alt: 'VDOM Development',
       },
       children: [
         componentThree,
       ]
-    };
+    });
 
-    const componentOne = {
-      identifier: '1',
-      nodeName: 'div',
+    const spanComponent = createComponent({
+      element: 'span',
       attributes: {
-        style: { fontFamily: 'Open Sans, sans-serif', fontSize: 14 }
+        style: { color: '#22b8cf' }
+      },
+      children: ['Blue span!']
+    });
+
+    const componentOne = createComponent({
+      element: 'div',
+      attributes: {
+        style: { fontFamily: 'Open Sans, sans-serif', fontSize: 14, padding: 20, backgroundColor: '#e9ecef' },
       },
       children: [
         componentTwo,
         componentThree,
+        spanComponent
       ]
-    };
+    })
 
     virtualDOM.render(componentOne, document.getElementById('root'));
   </script>

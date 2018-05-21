@@ -1,4 +1,4 @@
 import { VDOM } from './vdom';
-import { Component } from './models';
+import { createComponent } from './models';
 
-export { VDOM, Component };
+export { VDOM, createComponent };
