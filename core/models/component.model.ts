@@ -26,5 +26,6 @@ export const createComponent = (component: IComponent): VirtualComponent => {
     nodeName: component.element,
     attributes: component.attributes || {},
     children: component.children || [],
+    listeners: new Map<string, EventListener>(),
   };
 };

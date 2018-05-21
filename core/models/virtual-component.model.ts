@@ -9,32 +9,43 @@ export interface VirtualAttributes {
 // tslint:disable-next-line:interface-name
 export interface VirtualComponent {
   identifier: string;
-  nodeRef?: Element;
+  nodeRef: any;
   nodeName: string;
   state?: Object;
   attributes?: VirtualAttributes;
   children: VirtualComponent[];
+  listeners: Map<string, EventListener>;
 }
 
-export const createVirtualComponent = (component: VirtualComponent, reference: Element): VirtualComponent => {
-  const listeners = new Map<string, Function>();
-  if (!component) throw new Error(`You need to pass a Component to create it's virtual instance.`);
+export function removeVirtualComponentListeners(virtualComponent: VirtualComponent) {
+  virtualComponent.listeners.forEach((listener, event) => {
+    if (virtualComponent.nodeRef.nodeType === Node.ELEMENT_NODE) {
+      virtualComponent.nodeRef.removeEventListener(event, listener);
+    }
+  });
+}
+
+export const createVirtualComponent = (virtualComponent: VirtualComponent, reference: Element): VirtualComponent => {
+  if (!virtualComponent) throw new Error(`You need to pass a Virtual Component to create it's virtual instance.`);
   const virtualInstance: VirtualComponent = {
-    identifier: component.identifier,
-    nodeRef: reference,
-    nodeName: component.nodeName,
-    attributes: component.attributes || {},
-    children: component.children || [],
+    identifier: virtualComponent.identifier,
+    nodeRef: virtualComponent.nodeRef,
+    nodeName: virtualComponent.nodeName,
+    attributes: virtualComponent.attributes || {},
+    children: virtualComponent.children || [],
+    listeners: virtualComponent.listeners,
   };
   if (virtualInstance.attributes) {
-    const { attributes } = virtualInstance;
+    const { attributes, listeners, nodeRef } = virtualInstance;
     Object.keys(attributes).forEach(name => {
       if (isListener(name)) {
         console.log('Attribute is a listener');
         const eventType: string = name.toLowerCase().substring(2);
         const eventListener = attributes[name];
         if (typeof eventListener !== 'function') return;
-        reference.addEventListener(eventType, eventListener);
+        if (reference.nodeType === Node.ELEMENT_NODE) {
+          reference.addEventListener(eventType, eventListener);
+        }
         listeners.set(eventType, eventListener);
       }
     });

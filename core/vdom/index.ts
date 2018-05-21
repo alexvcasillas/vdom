@@ -43,13 +43,13 @@ const VDOM = {
    * @param virtualComponent Virtual Component to create
    * @param mountPoint Mount point of the given Virtual Component
    */
-  createElement(virtualComponent: VirtualComponent | string, mountPoint: Element | Text): void {
+  createElement(virtualComponent: VirtualComponent, mountPoint: Element | Text): void {
     let element: Element | Text;
-    const id = Math.random()
-      .toString(36)
-      .replace(/[^a-z]+/g, '')
-      .substr(0, 5);
-    // Check for a plain #text element
+    // const id = Math.random()
+    //   .toString(36)
+    //   .replace(/[^a-z]+/g, '')
+    //   .substr(0, 5);
+    // // Check for a plain #text element
     if (typeof virtualComponent === 'string') {
       element = document.createTextNode(virtualComponent);
       mountPoint.appendChild(element);
@@ -58,7 +58,7 @@ const VDOM = {
     // Create the element
     element = document.createElement(virtualComponent.nodeName);
     // Set the vdom-key attribute (development only)
-    element.setAttribute('vdom-key', id);
+    element.setAttribute('vdom-key', virtualComponent.identifier);
     this.setElementAttributes(element, virtualComponent.attributes);
     // Check if this virtual component has childrens
     if (virtualComponent.children) {
@@ -75,7 +75,7 @@ const VDOM = {
       element,
     );
     // this.virtualComponents.set(id, Object.assign({ identifier: id, nodeRef: element }, virtualComponent));
-    this.virtualComponents.set(id, theComponent);
+    this.virtualComponents.set(virtualComponent.identifier, theComponent);
     // Append this element to the mount point
     mountPoint.appendChild(element);
   },

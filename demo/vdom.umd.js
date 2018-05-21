@@ -606,19 +606,19 @@ var standardAttributes = {
 
 //# sourceMappingURL=index.js.map
 
-var createVirtualComponent = function (component, reference) {
-    var listeners = new Map();
-    if (!component)
-        throw new Error("You need to pass a Component to create it's virtual instance.");
+var createVirtualComponent = function (virtualComponent, reference) {
+    if (!virtualComponent)
+        throw new Error("You need to pass a Virtual Component to create it's virtual instance.");
     var virtualInstance = {
-        identifier: component.identifier,
-        nodeRef: reference,
-        nodeName: component.nodeName,
-        attributes: component.attributes || {},
-        children: component.children || [],
+        identifier: virtualComponent.identifier,
+        nodeRef: virtualComponent.nodeRef,
+        nodeName: virtualComponent.nodeName,
+        attributes: virtualComponent.attributes || {},
+        children: virtualComponent.children || [],
+        listeners: virtualComponent.listeners,
     };
     if (virtualInstance.attributes) {
-        var attributes_1 = virtualInstance.attributes;
+        var attributes_1 = virtualInstance.attributes, listeners_1 = virtualInstance.listeners;
         Object.keys(attributes_1).forEach(function (name) {
             if (isListener(name)) {
                 console.log('Attribute is a listener');
@@ -626,13 +626,16 @@ var createVirtualComponent = function (component, reference) {
                 var eventListener = attributes_1[name];
                 if (typeof eventListener !== 'function')
                     return;
-                reference.addEventListener(eventType, eventListener);
-                listeners.set(eventType, eventListener);
+                if (reference.nodeType === Node.ELEMENT_NODE) {
+                    reference.addEventListener(eventType, eventListener);
+                }
+                listeners_1.set(eventType, eventListener);
             }
         });
     }
     return virtualInstance;
 };
+//# sourceMappingURL=virtual-component.model.js.map
 
 var VDOM = {
     virtualComponents: new Map(),
@@ -680,11 +683,11 @@ var VDOM = {
     createElement: function (virtualComponent, mountPoint) {
         var _this = this;
         var element;
-        var id = Math.random()
-            .toString(36)
-            .replace(/[^a-z]+/g, '')
-            .substr(0, 5);
-        // Check for a plain #text element
+        // const id = Math.random()
+        //   .toString(36)
+        //   .replace(/[^a-z]+/g, '')
+        //   .substr(0, 5);
+        // // Check for a plain #text element
         if (typeof virtualComponent === 'string') {
             element = document.createTextNode(virtualComponent);
             mountPoint.appendChild(element);
@@ -693,7 +696,7 @@ var VDOM = {
         // Create the element
         element = document.createElement(virtualComponent.nodeName);
         // Set the vdom-key attribute (development only)
-        element.setAttribute('vdom-key', id);
+        element.setAttribute('vdom-key', virtualComponent.identifier);
         this.setElementAttributes(element, virtualComponent.attributes);
         // Check if this virtual component has childrens
         if (virtualComponent.children) {
@@ -705,7 +708,7 @@ var VDOM = {
         }
         var theComponent = createVirtualComponent(__assign({}, virtualComponent), element);
         // this.virtualComponents.set(id, Object.assign({ identifier: id, nodeRef: element }, virtualComponent));
-        this.virtualComponents.set(id, theComponent);
+        this.virtualComponents.set(virtualComponent.identifier, theComponent);
         // Append this element to the mount point
         mountPoint.appendChild(element);
     },
@@ -719,7 +722,6 @@ var VDOM = {
         this.createElement(virtualComponent, mount);
     },
 };
-//# sourceMappingURL=index.js.map
 
 var createComponent = function (component) {
     var constructor = component.constructor || function () {
@@ -746,6 +748,7 @@ var createComponent = function (component) {
         nodeName: component.element,
         attributes: component.attributes || {},
         children: component.children || [],
+        listeners: new Map(),
     };
 };
 //# sourceMappingURL=component.model.js.map
